@@ -1,18 +1,43 @@
-# Effect CLI Application Template
+# Advent of Code CLI
 
-This template provides a solid foundation for building scalable and maintainable command-line applications with Effect. 
+A CLI tool for running Advent of Code solutions using Effect TypeScript.
 
-## Running Code
+## Usage
 
-This template leverages [tsx](https://tsx.is) to allow execution of TypeScript files via NodeJS as if they were written in plain JavaScript.
-
-To execute a file with `tsx`:
+After building, run solutions with:
 
 ```sh
-pnpm tsx ./path/to/the/file.ts
+aoc <day>
 ```
 
-## Operations
+For example:
+
+```sh
+aoc 1    # Run solution for day 1
+aoc 25   # Run solution for day 25
+```
+
+## Adding Solutions
+
+1. Create a solution file at `src/solutions/dayXX.ts` (e.g., `day01.ts`, `day02.ts`)
+2. Export a default function that returns an `Effect.Effect<void>`
+3. Register it in `src/solutions/index.ts`
+
+Example solution:
+
+```typescript
+import * as Console from "effect/Console"
+import * as Effect from "effect/Effect"
+
+export default function run() {
+  return Effect.gen(function* () {
+    yield* Console.log("Day 1 Solution")
+    // Your solution code here
+  })
+}
+```
+
+## Development
 
 **Building**
 
@@ -22,6 +47,14 @@ To build the package:
 pnpm build
 ```
 
+**Running in Development**
+
+You can run the CLI directly with tsx:
+
+```sh
+pnpm tsx src/bin.ts 1
+```
+
 **Testing**
 
 To test the package:
@@ -29,4 +62,3 @@ To test the package:
 ```sh
 pnpm test
 ```
-

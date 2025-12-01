@@ -9,6 +9,9 @@
     "type": "git",
     "url": "<PLACEHOLDER>"
   },
+  "bin": {
+    "aoc": "./dist/bin.js"
+  },
   "publishConfig": {
     "access": "public",
     "directory": "dist"
