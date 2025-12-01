@@ -6,8 +6,7 @@ export const runSolution = (day: number) =>
   Effect.gen(function*() {
     yield* Console.log(`Running solution for day ${day}...`)
 
-    const solution = solutions.get(day)
-    if (!solution) {
+    if (!(day in solutions)) {
       yield* Console.error(`Solution for day ${day} not found`)
       const dayStr = day.toString().padStart(2, "0")
       yield* Console.log(
@@ -15,6 +14,7 @@ export const runSolution = (day: number) =>
       )
       return
     }
+    const solution = solutions[day as keyof typeof solutions]
 
     yield* solution()
   })
