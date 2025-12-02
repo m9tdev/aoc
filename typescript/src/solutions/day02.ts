@@ -1,3 +1,4 @@
+import type { PlatformError } from "@effect/platform/Error"
 import * as FileSystem from "@effect/platform/FileSystem"
 import * as Console from "effect/Console"
 import * as Effect from "effect/Effect"
@@ -5,7 +6,7 @@ import { pipe } from "effect/Function"
 import * as Schema from "effect/Schema"
 import * as Stream from "effect/Stream"
 
-export default function run() {
+export default function run(): Effect.Effect<void, PlatformError, FileSystem.FileSystem> {
   return Effect.gen(function*() {
     const fs = yield* FileSystem.FileSystem
 
