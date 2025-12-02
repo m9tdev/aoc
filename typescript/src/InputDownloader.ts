@@ -4,6 +4,7 @@ import * as HttpClientRequest from "@effect/platform/HttpClientRequest"
 import * as Path from "@effect/platform/Path"
 import * as Console from "effect/Console"
 import * as Effect from "effect/Effect"
+import { getAocSession } from "./loadEnv.js"
 
 const AOC_BASE_URL = "https://adventofcode.com"
 
@@ -12,12 +13,13 @@ export const downloadInput = (day: number, year: number = new Date().getFullYear
     const fs = yield* FileSystem.FileSystem
     const path = yield* Path.Path
 
-    // Get session cookie from environment
-    const sessionCookie = process.env.AOC_SESSION
+    // Get session cookie from environment or .env file
+    const sessionCookie = yield* getAocSession()
     if (!sessionCookie) {
       yield* Console.error("AOC_SESSION environment variable is not set")
       yield* Console.log("Get your session cookie from https://adventofcode.com (check browser cookies)")
-      yield* Console.log("Then set it: export AOC_SESSION=your_session_cookie")
+      yield* Console.log("Then set it in a .env file: AOC_SESSION=your_session_cookie")
+      yield* Console.log("Or set it as an environment variable: export AOC_SESSION=your_session_cookie")
       return
     }
 
