@@ -1,15 +1,15 @@
-import type { PlatformError } from "@effect/platform/Error"
-import type * as FileSystem from "@effect/platform/FileSystem"
+import * as FileSystem from "@effect/platform/FileSystem"
 import * as Console from "effect/Console"
 import * as Effect from "effect/Effect"
 import * as Either from "effect/Either"
+import { pipe } from "effect/Function"
+import * as Stream from "effect/Stream"
 
 export const runSolution = (day: number) =>
   Effect.gen(function*() {
     yield* Console.log(`Running solution for day ${day}...`)
 
     const dayStr = day.toString().padStart(2, "0")
-    // Bun can import .ts files directly, so we use .ts extension
     const modulePath = new URL(`./solutions/day${dayStr}.ts`, import.meta.url).href
 
     const moduleEither = yield* Effect.tryPromise({
@@ -23,15 +23,27 @@ export const runSolution = (day: number) =>
       return
     }
 
-    const module = moduleEither.right as { default: () => Effect.Effect<void, PlatformError, FileSystem.FileSystem> }
+    const module = moduleEither.right as {
+      default: (input: Stream.Stream<string>) => Effect.Effect<void>
+    }
     if (!module.default) {
       yield* Console.error(`Solution for day ${day} does not export a default function`)
       return
     }
 
-    yield* module.default().pipe(
-      Effect.catchAll((error) =>
-        Console.error(`Error running solution: ${error instanceof Error ? error.message : String(error)}`)
-      )
+    // Read and process input file
+    const fs = yield* FileSystem.FileSystem
+    const year = new Date().getFullYear()
+    const inputPath = `inputs/${year}-day${dayStr}.txt`
+
+    const inputStream = pipe(
+      fs.stream(inputPath),
+      Stream.decodeText("utf-8"),
+      Stream.splitLines,
+      Stream.orDieWith((error) => new Error(`Failed to read input file: ${String(error)}`))
+    )
+
+    yield* module.default(inputStream).pipe(
+      Effect.orDieWith((error) => new Error(`Error running solution: ${String(error)}`))
     )
   })
