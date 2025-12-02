@@ -7,7 +7,7 @@ import type * as Layer from "effect/Layer"
 import * as Stream from "effect/Stream"
 import { Solution } from "./solutions/Solution.js"
 
-export const runSolution = (day: number) =>
+export const runSolution = (day: number, useExample: boolean = false) =>
   Effect.gen(function*() {
     yield* Console.log(`Running solution for day ${day}...`)
 
@@ -36,7 +36,7 @@ export const runSolution = (day: number) =>
     // Read and process input file
     const fs = yield* FileSystem.FileSystem
     const year = new Date().getFullYear()
-    const inputPath = `inputs/${year}-day${dayStr}.txt`
+    const inputPath = `inputs/${year}-day${dayStr}${useExample ? "-example" : ""}.txt`
 
     const inputStream = pipe(
       fs.stream(inputPath),
