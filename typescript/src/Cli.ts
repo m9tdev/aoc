@@ -76,9 +76,7 @@ const generateCommand = Command.make("generate", { day }, ({ day }) =>
     }
 
     // Generate file content
-    const content = `import * as Effect from "effect/Effect"
-import * as Layer from "effect/Layer"
-import * as Stream from "effect/Stream"
+    const content = `import { Effect, Layer, Stream } from "effect"
 import { Solution } from "./Solution.js"
 
 const part1 = (input: Stream.Stream<string>): Effect.Effect<number> =>
