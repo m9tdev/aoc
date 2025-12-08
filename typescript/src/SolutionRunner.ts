@@ -82,8 +82,8 @@ export const runSolution = (day: number, useExample: boolean = false) =>
       Solution,
       Effect.flatMap((solution) =>
         Effect.gen(function*() {
-          const resultPart1 = yield* solution.part1(inputStream)
-          const resultPart2 = yield* solution.part2(inputStream)
+          const resultPart1 = yield* solution.part1(inputStream, useExample)
+          const resultPart2 = yield* solution.part2(inputStream, useExample)
           yield* Console.log("Part 1: ", resultPart1)
           yield* Console.log("Part 2: ", resultPart2)
         })
