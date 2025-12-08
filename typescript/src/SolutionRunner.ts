@@ -82,10 +82,20 @@ export const runSolution = (day: number, useExample: boolean = false) =>
       Solution,
       Effect.flatMap((solution) =>
         Effect.gen(function*() {
+          // Measure runtime for Part 1
+          const startPart1 = Date.now()
           const resultPart1 = yield* solution.part1(inputStream, useExample)
+          const endPart1 = Date.now()
+          const runtimePart1 = endPart1 - startPart1
+
+          // Measure runtime for Part 2
+          const startPart2 = Date.now()
           const resultPart2 = yield* solution.part2(inputStream, useExample)
-          yield* Console.log("Part 1: ", resultPart1)
-          yield* Console.log("Part 2: ", resultPart2)
+          const endPart2 = Date.now()
+          const runtimePart2 = endPart2 - startPart2
+
+          yield* Console.log(`Part 1: (${runtimePart1}ms)\t`, resultPart1)
+          yield* Console.log(`Part 2: (${runtimePart2}ms)\t`, resultPart2)
         })
       ),
       Effect.provide(module.default),
